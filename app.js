@@ -16,6 +16,8 @@ mongoose.connect("mongodb://localhost:27017/shop-DB", {
     useUnifiedTopology: true,
 })
 
+mongoose.Promise = global.Promise;
+
 // cors handling
 // app.use((req, res, next) => {
 //     res.header('Access-Control-Allow-Origin', '*');
