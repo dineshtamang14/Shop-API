@@ -1,59 +1,72 @@
 import express from "express";
+import Product from '../models/product.js';
+import mongoose from "mongoose";
 
 const router = express.Router();
 
 router.get("/", (req, res, next) => {
-    res.status(200).json({
-        msg: "get all products",
+    Product.find().exec().then(data => {
+        res.status(200).json(data);
+    }).catch(err => {
+        res.status(500).json({
+            error: err
+        })
     })
 })
 
 router.post("/", (req, res, next) => {
-    res.status(201).json({
-        msg: "updated"
-    })
+    const product = new Product({
+        _id: new mongoose.Types.ObjectId(),
+        name: req.body.name,
+        price: req.body.price
+    });
+    product.save().then(result => {
+        res.status(201).json(result)
+    }).catch(err => {
+        res.status(500).json({
+            error: err
+        });
+    });
 })
 
 router.get("/:productId", (req, res, next) => {
     const id = req.params.productId;
-    if(id === "s"){
-        res.status(200).json({
-            msg: "u discorverd special", 
-            id: id 
-        })
-    } else {
-        res.status(200).json({
-            msg: 'wrong id'
+    Product.findById(id).exec().then(data => {
+        if(data){
+            res.status(200).json(data);
+        } else {
+            res.status(404).json({
+                msg: "No Valid Entry found for provided ID"
+            })
+        }
+        
+    }).catch(err => {
+        res.status(500).json({
+            error: err
         });
-    }
+    })
 })
 
 router.patch("/:productId", (req, res, next) => {
     const id = req.params.productId;
-    if(id === "s"){
-        res.status(200).json({
-            msg: "u discorverd special", 
-            id: id 
+    Product.findByIdAndUpdate(id, req.body, {new: true}).then(data => {
+        res.status(203).json(data);
+    }).catch(err => {
+        res.status(500).json({
+            error: err
         })
-    } else {
-        res.status(200).json({
-            msg: 'wrong id'
-        });
-    }
+    })
 })
 
 router.delete("/:productId", (req, res, next) => {
     const id = req.params.productId;
-    if(id === "s"){
-        res.status(200).json({
-            msg: "u discorverd special", 
-            id: id 
+    Product.remove({_id: id}).exec().then(data => {
+        res.status(200).json(data);
+    }).catch(err => {
+        res.status(500).json({
+            error: err
         })
-    } else {
-        res.status(200).json({
-            msg: 'wrong id'
-        });
-    }
+    })
 })
 
 export default router;
