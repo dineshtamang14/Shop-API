@@ -1,13 +1,12 @@
 import express from "express";
 import mongoose from "mongoose";
-import order from "../models/order.js";
 import Order from "../models/order.js";
 import Product from "../models/product.js";
 
 const router = express.Router();
 
 router.get("/", (req, res, next) => {
-    Order.find().select('product quantity _id').exec().then(data => {
+    Order.find().select('product quantity _id').populate('product').then(data => {
         res.status(200).json({
             count: data.length,
             orders: data.map(doc => {
@@ -66,7 +65,7 @@ router.post("/", (req, res, next) => {
 });
 
 router.get("/:orderId", (req, res, next) => {
-    Order.findById(req.params.orderId).select('product quantity _id createdAt updatedAt').exec().then(data => {
+    Order.findById(req.params.orderId).select('product quantity _id createdAt updatedAt').populate('product').exec().then(data => {
         if(!data){
             return res.status(404).json({
                 msg: "Order Not Found"
