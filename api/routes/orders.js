@@ -6,7 +6,7 @@ import Product from "../models/product.js";
 const router = express.Router();
 
 router.get("/", (req, res, next) => {
-    Order.find().select('product quantity _id').populate('product').then(data => {
+    Order.find().select('product quantity _id').populate('product', 'price').then(data => {
         res.status(200).json({
             count: data.length,
             orders: data.map(doc => {
@@ -65,24 +65,29 @@ router.post("/", (req, res, next) => {
 });
 
 router.get("/:orderId", (req, res, next) => {
-    Order.findById(req.params.orderId).select('product quantity _id createdAt updatedAt').populate('product').exec().then(data => {
-        if(!data){
-            return res.status(404).json({
-                msg: "Order Not Found"
-            });
+    Order.findById(req.params.orderId)
+      .select("product quantity _id createdAt updatedAt")
+      .populate('product', 'price')
+      .exec()
+      .then((data) => {
+        if (!data) {
+          return res.status(404).json({
+            msg: "Order Not Found",
+          });
         }
         res.status(200).json({
-            order: data,
-            request: {
-                type: "GET",
-                url: "http://localhost:5000/orders"
-            }
-        })
-    }).catch(err => {
-        res.status(500).json({
-            error: err
+          order: data,
+          request: {
+            type: "GET",
+            url: "http://localhost:5000/orders",
+          },
         });
-    })
+      })
+      .catch((err) => {
+        res.status(500).json({
+          error: err,
+        });
+      });
 });
 
 router.delete("/:orderId", (req, res, next) => {
