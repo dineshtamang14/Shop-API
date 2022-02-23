@@ -2,6 +2,7 @@ import express from "express";
 import Product from '../models/product.js';
 import mongoose from "mongoose";
 import multer from "multer";
+import path from "path";
 
 const router = express.Router();
 const storage = multer.diskStorage({
@@ -9,7 +10,7 @@ const storage = multer.diskStorage({
         cb(null, './uploads/')
     },
     filename: function(req, file, cb) {
-        cb(null, new Date().toISOString() + file.originalname);
+        cb(null, Date.now() + path.extname(file.originalname));
     }
 });
 
@@ -57,7 +58,7 @@ router.get("/", (req, res, next) => {
 
 router.post("/", upload.single("productImage"), (req, res, next) => {
 
-    console.log(req.file);
+    // console.log(req.file);
 
     const product = new Product({
       _id: new mongoose.Types.ObjectId(),
