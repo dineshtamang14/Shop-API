@@ -2,6 +2,7 @@ import express from "express";
 import cors from 'cors';
 import productRoutes from "./api/routes/products.js";
 import orderRoutes from "./api/routes/orders.js";
+import userRoutes from "./api/routes/user.js";
 import morgan from "morgan";
 import mongoose from 'mongoose';
 
@@ -36,6 +37,7 @@ app.use(morgan('dev'));
 
 app.use("/products", productRoutes);
 app.use("/orders", orderRoutes);
+app.use("/user", userRoutes);
 
 app.use((req, res, next) => {
     const error = new Error("Not Found");
