@@ -1,5 +1,4 @@
 import express from "express";
-import Product from '../models/product.js';
 import multer from "multer";
 import path from "path";
 import checkAuth from "../middleware/check-auth.js";
@@ -43,39 +42,12 @@ router.post(
 
 router.get("/:productId", productsController.products_get_product);
 
-router.patch("/:productId", checkAuth, (req, res, next) => {
-    const id = req.params.productId;
-    Product.findByIdAndUpdate(id, req.body, {new: true}).then(data => {
-        res.status(203).json({
-            msg: "Product updated",
-            request: {
-                type: 'GET',
-                url: 'http://localhost:5000/products/' + id
-            }
-        });
-    }).catch(err => {
-        res.status(500).json({
-            error: err
-        })
-    })
-})
+router.patch("/:productId", checkAuth, productsController.products_update_product)
 
-router.delete("/:productId", checkAuth, (req, res, next) => {
-    const id = req.params.productId;
-    Product.remove({_id: id}).exec().then(data => {
-        res.status(200).json({
-            msg: "Product deleted",
-            request: {
-                type: 'POST',
-                url: 'http://localhost:5000/products',
-                body: { name: 'String', price: 'Number' }
-            }
-        });
-    }).catch(err => {
-        res.status(500).json({
-            error: err
-        })
-    })
-})
+router.delete(
+  "/:productId",
+  checkAuth,
+  productsController.products_delete_product
+);
 
 export default router;

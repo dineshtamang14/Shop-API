@@ -88,8 +88,50 @@ const products_get_product = (req, res, next) => {
     });
 };
 
+const products_update_product = (req, res, next) => {
+  const id = req.params.productId;
+  Product.findByIdAndUpdate(id, req.body, { new: true })
+    .then((data) => {
+      res.status(203).json({
+        msg: "Product updated",
+        request: {
+          type: "GET",
+          url: "http://localhost:5000/products/" + id,
+        },
+      });
+    })
+    .catch((err) => {
+      res.status(500).json({
+        error: err,
+      });
+    });
+};
+
+const products_delete_product = (req, res, next) => {
+  const id = req.params.productId;
+  Product.remove({ _id: id })
+    .exec()
+    .then((data) => {
+      res.status(200).json({
+        msg: "Product deleted",
+        request: {
+          type: "POST",
+          url: "http://localhost:5000/products",
+          body: { name: "String", price: "Number" },
+        },
+      });
+    })
+    .catch((err) => {
+      res.status(500).json({
+        error: err,
+      });
+    });
+};
+
 export default {
   products_get_all,
   products_create_product,
   products_get_product,
+  products_update_product,
+  products_delete_product
 };
