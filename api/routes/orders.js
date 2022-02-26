@@ -2,10 +2,11 @@ import express from "express";
 import mongoose from "mongoose";
 import Order from "../models/order.js";
 import Product from "../models/product.js";
+import checkAuth from "../middleware/check-auth.js";
 
 const router = express.Router();
 
-router.get("/", (req, res, next) => {
+router.get("/", checkAuth, (req, res, next) => {
     Order.find().select('product quantity _id').populate('product', 'price').then(data => {
         res.status(200).json({
             count: data.length,
@@ -28,7 +29,7 @@ router.get("/", (req, res, next) => {
     })
 });
 
-router.post("/", (req, res, next) => {
+router.post("/", checkAuth, (req, res, next) => {
     Product.findById(req.body.productId).then(product => {
         if(!product){
             return res.status(404).json({
@@ -64,7 +65,7 @@ router.post("/", (req, res, next) => {
           });
 });
 
-router.get("/:orderId", (req, res, next) => {
+router.get("/:orderId", checkAuth, (req, res, next) => {
     Order.findById(req.params.orderId)
       .select("product quantity _id createdAt updatedAt")
       .populate('product', 'price')
@@ -90,7 +91,7 @@ router.get("/:orderId", (req, res, next) => {
       });
 });
 
-router.delete("/:orderId", (req, res, next) => {
+router.delete("/:orderId", checkAuth, (req, res, next) => {
     Order.remove({_id: req.params.orderId}).exec().then(data => {
         res.status(200).json({
             message: "Order deleted",
