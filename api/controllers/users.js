@@ -22,8 +22,11 @@ const user_signup = (req, res, next) => {
           } else {
             const user = new User({
               _id: new mongoose.Types.ObjectId(),
+              name: req.body.name,
               email: req.body.email,
               password: hash,
+              phone: req.body.phone,
+              address: req.body.address
             });
             user
               .save()

@@ -23,17 +23,6 @@ mongoose.connect(mongodburl, {
 
 mongoose.Promise = global.Promise;
 
-// cors handling
-// app.use((req, res, next) => {
-//     res.header('Access-Control-Allow-Origin', '*');
-//     res.header('Access-Control-Allow-Header', 'Origin, X-Request-With, Content-Type, Accept, Authorization');
-//     if(req.method === 'OPTIONS'){
-//         res.header('Access-Contorl-Allow-Methods', 'PUT, POST, PATCH, DELETE, GET');
-//         return res.status(200).json({});
-//     }
-//     next();
-// });
-
 
 app.use(morgan('dev'));
 

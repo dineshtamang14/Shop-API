@@ -11,6 +11,7 @@ const orders_get_all = (req, res, next) => {
                     _id: doc._id,
                     product: doc.product,
                     quantity: doc.quantity,
+                    total: doc.total,
                     request: {
                         type: "GET",
                         url: "http://localhost:5000/orders/" + doc._id
@@ -38,6 +39,7 @@ const orders_create_order = (req, res, next) => {
         _id: mongoose.Types.ObjectId(),
         quantity: req.body.quantity,
         product: req.body.productId,
+        total: req.body.total
       });
       return order.save();
     })
@@ -48,6 +50,7 @@ const orders_create_order = (req, res, next) => {
           _id: data._id,
           product: data.product,
           quantity: data.quantity,
+          total: data.total,
         },
         request: {
           type: "GET",
@@ -64,7 +67,7 @@ const orders_create_order = (req, res, next) => {
 
 const orders_get_order = (req, res, next) => {
   Order.findById(req.params.orderId)
-    .select("product quantity _id createdAt updatedAt")
+    .select("product quantity _id createdAt updatedAt total")
     .populate("product", "price")
     .exec()
     .then((data) => {

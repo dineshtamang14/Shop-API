@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 
 const products_get_all = (req, res, next) => {
   Product.find()
-    .select("name price _id productImage")
+    .select("name price _id productImage productDes")
     .exec()
     .then((data) => {
       const response = {
@@ -38,15 +38,17 @@ const products_create_product = (req, res, next) => {
     name: req.body.name,
     price: req.body.price,
     productImage: `http://localhost:5000/${req.file.path}`,
+    productDes: req.body.productDes
   });
   product
     .save()
     .then((result) => {
       res.status(201).json({
         createdProduct: {
+          _id: result._id,
           name: result.name,
           price: result.price,
-          _id: result._id,
+          productDes: result.productDes,
           request: {
             type: "GET",
             url: "http://localhost:5000/products/" + result._id,
@@ -64,7 +66,7 @@ const products_create_product = (req, res, next) => {
 const products_get_product = (req, res, next) => {
   const id = req.params.productId;
   Product.findById(id)
-    .select("name price _id productImage")
+    .select("name price _id productImage productDes")
     .exec()
     .then((data) => {
       if (data) {

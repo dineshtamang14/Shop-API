@@ -10,7 +10,14 @@ const productSchema = mongoose.Schema({
         type: Number,
         required: true
     },
-    productImage: { type: String, required: true }
+    productImage: { 
+        type: String, 
+        required: true 
+    },  
+    productDes: { 
+        type: String, 
+        required: true
+    }
 }, { timestamps: true });
 
 export default mongoose.model('Product', productSchema);
