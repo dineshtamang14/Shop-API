@@ -12,8 +12,12 @@ const productSchema = mongoose.Schema({
     },
     productImage: { 
         type: String, 
-        required: true 
+        required: true
     },  
+    imgData: {
+        type: Buffer,
+        required: true
+    },
     productDes: { 
         type: String, 
         required: true

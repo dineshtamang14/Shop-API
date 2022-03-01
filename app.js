@@ -5,13 +5,14 @@ import orderRoutes from "./api/routes/orders.js";
 import userRoutes from "./api/routes/users.js";
 import morgan from "morgan";
 import mongoose from 'mongoose';
+import upload from "express-fileupload";
 import dotenv from "dotenv";
 dotenv.config();
 
 const app = express();
 
-app.use("/uploads", express.static("uploads"));
 app.use(express.urlencoded({ extended: false }));
+app.use(upload());
 app.use(express.json());
 app.use(cors());
 
